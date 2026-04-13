@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Weather Backend Demo{% endblock %}
+{% block content %}
+<header class="header card">
+  <div>
+    <h1>Weather Lookup</h1>
+    <p class="muted">
+      PM Accelerator — backend assessment: Flask, SQLite, Open-Meteo, and a small demo UI.
+    </p>
+  </div>
+  <div class="byline">
+    <span class="label">Author</span>
+    <span class="name">Max Qiu</span>
+  </div>
+</header>
+
+<section class="card search-card">
+  <h2>Search</h2>
+  <form id="weather-form" class="form-grid">
+    <label class="full">
+      Location
+      <input
+        type="text"
+        id="location-input"
+        name="location_input"
+        placeholder="City, postal code, or lat, lon"
+        autocomplete="off"
+      />
+    </label>
+    <div class="row-actions">
+      <button type="button" class="secondary" id="geo-btn">Use my current location</button>
+      <button type="submit" class="primary">Get weather</button>
+    </div>
+    <div class="date-row">
+      <label>
+        Start (forecast)
+        <input type="date" id="start-date" name="start_date" />
+      </label>
+      <label>
+        End (forecast)
+        <input type="date" id="end-date" name="end_date" />
+      </label>
+    </div>
+    <p class="hint muted">
+      Leave dates empty for <strong>current</strong> weather. Set both for a <strong>forecast</strong> range (within the next {{ max_forecast_days }} days).
+    </p>
+  </form>
+  <div id="form-error" class="alert error hidden" role="alert"></div>
+</section>
+
+<section class="card" id="result-section" hidden>
+  <h2>Result</h2>
+  <div id="result-body" class="result-grid"></div>
+</section>
+
+<section class="card">
+  <div class="section-head">
+    <h2>Saved history</h2>
+    <button type="button" class="secondary" id="refresh-history">Refresh</button>
+  </div>
+  <ul id="history-list" class="history-list"></ul>
+  <p id="history-empty" class="muted">No saved queries yet.</p>
+</section>
+
+<section class="card">
+  <h2>Export</h2>
+  <p class="muted">Download every saved record as a CSV file.</p>
+  <a class="button primary" href="/api/records/export/csv">Download CSV</a>
+</section>
+
+<section class="card">
+  <h2>Update / delete a record (API demo)</h2>
+  <p class="muted">
+    Sends the same fields as search to re-resolve the location and refresh stored weather.
+  </p>
+  <div class="crud-grid">
+    <label>
+      Record ID
+      <input type="number" id="crud-id" min="1" step="1" placeholder="e.g. 1" />
+    </label>
+    <label class="full">
+      Location
+      <input type="text" id="crud-location" placeholder="City or coordinates" />
+    </label>
+    <label>
+      Start
+      <input type="date" id="crud-start" />
+    </label>
+    <label>
+      End
+      <input type="date" id="crud-end" />
+    </label>
+    <div class="row-actions">
+      <button type="button" class="secondary" id="crud-geo">Use my location for update</button>
+    </div>
+    <div class="row-actions">
+      <button type="button" class="primary" id="crud-update">Update record</button>
+      <button type="button" class="danger" id="crud-delete">Delete record</button>
+    </div>
+  </div>
+  <div id="crud-msg" class="alert hidden" role="status"></div>
+</section>
+{% endblock %}
